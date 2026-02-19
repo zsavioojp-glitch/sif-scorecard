@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Sport Investment Fund</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#070d18;--bg2:#0c1525;--surface:#101e32;--surface2:#152540;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --gold:#e4a832;--gold-lt:#f5d47a;--gold-dim:rgba(228,168,50,0.13);
+  --white:#eeecea;--gray:#6e7a92;--light:#aab4c8;
+  --alpha:#4099f7;--alpha-dim:rgba(64,153,247,0.12);
+  --beta:#e85555;--beta-dim:rgba(232,85,85,0.12);
+  --gamma:#e4a832;--gamma-dim:rgba(228,168,50,0.12);
+  --green:#3ec47a;--green-dim:rgba(62,196,122,0.12);
+  --red:#e85555;--red-dim:rgba(232,85,85,0.12);
+  --mono:'Space Mono',monospace;--sans:'Sarabun',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--sans);background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+
+/* ── LOGIN ───────────────────────────────────── */
+#loginScreen{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:40px 28px;
+  background:radial-gradient(ellipse at 25% 25%,rgba(64,153,247,0.07) 0%,transparent 55%),
+             radial-gradient(ellipse at 75% 75%,rgba(228,168,50,0.07) 0%,transparent 55%),var(--bg);
+}
+.login-logo{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:8px;text-align:center}
+.login-title{font-size:32px;font-weight:700;text-align:center;margin-bottom:6px;
+  background:linear-gradient(135deg,var(--white),var(--light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.login-sub{font-size:13px;color:var(--gray);text-align:center;margin-bottom:48px}
+
+/* ── FIX: login box ไม่ให้ล้น ── */
+.login-box{
+  width:100%;max-width:340px;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:18px;padding:28px 24px;
+  overflow:hidden; /* กันล้น */
+}
+.login-box-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:10px}
+
+/* ── FIX: pw-wrap เป็น flex ที่ไม่ล้น ── */
+.pw-wrap{display:flex;gap:8px;width:100%;min-width:0}
+
+/* ── FIX: input ต้องมี min-width:0 และ width:0 เพื่อให้ flex shrink ได้ ── */
+.pw-input{
+  flex:1 1 0;
+  min-width:0;
+  width:0;
+  padding:13px 16px;
+  background:var(--bg2);
+  border:1px solid var(--border2);border-radius:10px;
+  color:var(--white);font-size:16px;font-family:var(--mono);
+  letter-spacing:4px;outline:none;transition:border-color .2s;
+}
+.pw-input:focus{border-color:var(--gold)}
+.pw-input::placeholder{letter-spacing:0;font-family:var(--sans);font-size:13px;color:var(--gray)}
+
+/* ── FIX: ปุ่มไม่ shrink ── */
+.pw-btn{
+  flex-shrink:0;
+  padding:13px 20px;border-radius:10px;background:var(--gold);
+  color:#0c1525;font-size:14px;font-weight:700;border:none;
+  cursor:pointer;font-family:var(--sans);transition:all .2s;white-space:nowrap;
+}
+.pw-btn:hover{background:var(--gold-lt)}
+.pw-btn:active{transform:scale(.97)}
+.pw-error{font-size:12px;color:var(--red);margin-top:10px;display:none;padding:8px 12px;background:var(--red-dim);border-radius:8px}
+
+/* ── APP ─────────────────────────────────────── */
+#appScreen{display:none}
+
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(7,13,24,0.95);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border2);
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
+}
+.topbar-l{display:flex;align-items:center;gap:10px}
+.top-badge{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;font-family:var(--mono);flex-shrink:0}
+.top-name{font-size:14px;font-weight:700}
+.top-role{font-size:10px;color:var(--gray);margin-top:1px;letter-spacing:.5px}
+.logout-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--gray);font-size:12px;cursor:pointer;font-family:var(--sans);transition:all .2s}
+.logout-btn:hover{color:var(--white);border-color:rgba(255,255,255,0.25)}
+
+.week-bar{padding:12px 18px 10px;display:flex;align-items:center;gap:10px}
+.week-tabs{display:flex;gap:6px}
+.wtab{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--gray);transition:all .2s;font-family:var(--sans)}
+.wtab.on{background:var(--gold);color:#0c1525;border-color:var(--gold)}
+
+.sum-strip{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:0 18px 14px}
+.sbox{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 8px;text-align:center}
+.sbox-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-bottom:5px}
+.sbox-val{font-family:var(--mono);font-size:15px;font-weight:700}
+.sbox-sub{font-size:9px;color:var(--gray);margin-top:3px}
+
+.sec{padding:4px 18px 10px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);display:flex;align-items:center;gap:10px}
+.sec::before,.sec::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.lb-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:0 18px 16px}
+.lb-card{border-radius:12px;padding:14px 10px;text-align:center;border:1px solid var(--border);background:var(--surface)}
+.lb-card.crown{border-color:var(--gold);background:var(--gold-dim)}
+.lb-medal{font-size:22px;margin-bottom:5px}
+.lb-name{font-size:12px;font-weight:700;margin-bottom:3px}
+.lb-roi{font-family:var(--mono);font-size:18px;font-weight:700;line-height:1;margin-bottom:3px}
+.lb-pl{font-size:10px;color:var(--gray)}
+
+.teams-wrap{padding:0 18px;display:flex;flex-direction:column;gap:12px}
+.t-panel{border-radius:14px;border:1px solid var(--border);overflow:hidden}
+.t-head{padding:14px 15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.t-head-l{display:flex;align-items:center;gap:10px}
+.t-ico{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;font-family:var(--mono);flex-shrink:0}
+.t-pname{font-size:14px;font-weight:700}
+.t-pnick{font-size:11px;font-style:italic;color:var(--gray);margin-top:1px}
+.t-head-r{text-align:right}
+.t-roi{font-family:var(--mono);font-size:17px;font-weight:700}
+.t-plval{font-size:11px;margin-top:2px}
+.t-chevron{font-size:10px;color:var(--gray);margin-top:4px;transition:transform .3s;display:inline-block}
+.t-chevron.open{transform:rotate(180deg)}
+
+.t-body{padding:14px 15px;border-top:1px solid var(--border);display:none}
+.t-body.open{display:block}
+
+.t-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:14px}
+.ts-box{background:var(--bg2);border-radius:8px;padding:9px 7px;text-align:center;border:1px solid var(--border)}
+.ts-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
+.ts-val{font-family:var(--mono);font-size:13px;font-weight:700}
+
+.add-btn{width:100%;padding:10px;border-radius:8px;border:1px dashed var(--border2);background:transparent;color:var(--gray);font-size:13px;cursor:pointer;font-family:var(--sans);transition:all .2s;margin-bottom:12px}
+.add-btn:hover{background:var(--surface2);color:var(--white);border-style:solid}
+
+.bet-form{background:var(--bg2);border-radius:10px;padding:14px;border:1px solid var(--border2);margin-bottom:12px;display:none}
+.bet-form.open{display:block}
+.f-row{display:grid;gap:7px;margin-bottom:7px}
+.f2{grid-template-columns:1fr 1fr}.f3{grid-template-columns:1fr 1fr 1fr}
+.fg label{display:block;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
+.fg input,.fg select{width:100%;padding:9px 10px;background:var(--surface);border:1px solid var(--border2);border-radius:7px;color:var(--white);font-size:13px;font-family:var(--sans);outline:none;transition:border-color .2s}
+.fg input:focus,.fg select:focus{border-color:var(--gold)}
+.fg select option{background:var(--surface)}
+.f-btns{display:flex;gap:8px;margin-top:10px}
+.fbtn{flex:1;padding:9px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);border:none;transition:all .2s}
+.fbtn-ok{background:var(--gold);color:#0c1525}.fbtn-ok:hover{background:var(--gold-lt)}
+.fbtn-cancel{background:var(--surface);color:var(--gray);border:1px solid var(--border2)}
+
+.bets-list{display:flex;flex-direction:column;gap:7px}
+.bet-row{background:var(--surface);border-radius:9px;padding:11px 12px;border:1px solid var(--border);display:flex;align-items:center;gap:8px;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.bet-main{flex:1;min-width:0}
+.bet-mtxt{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bet-tags{font-size:10px;color:var(--gray);margin-top:3px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tag{background:var(--surface2);padding:2px 7px;border-radius:4px;font-size:10px}
+.st-btns{display:flex;gap:4px;flex-shrink:0}
+.stb{width:28px;height:28px;border-radius:6px;border:1px solid var(--border2);background:transparent;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.stb:active{transform:scale(.92)}
+.sw.on{background:var(--green-dim);border-color:var(--green)}
+.sl.on{background:var(--red-dim);border-color:var(--red)}
+.sp.on{background:var(--gold-dim);border-color:var(--gold)}
+.bet-r{text-align:right;flex-shrink:0}
+.bet-stake{font-size:11px;color:var(--gray)}
+.bet-profit{font-family:var(--mono);font-size:13px;font-weight:700;margin-top:2px}
+.del-btn{width:22px;height:22px;border:none;background:transparent;color:var(--gray);font-size:15px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;border-radius:5px}
+.del-btn:hover{color:var(--red);background:var(--red-dim)}
+.empty-bets{text-align:center;padding:22px;color:var(--gray);font-size:13px;border:1px dashed var(--border);border-radius:9px}
+.readonly-note{text-align:center;padding:10px;font-size:11px;color:var(--gray);font-style:italic}
+
+.m-wrap{padding:0 18px 24px}
+.m-table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.m-table th{background:var(--surface2);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gray);padding:9px 10px;border-bottom:1px solid var(--border2);text-align:center}
+.m-table th:first-child{text-align:left}
+.m-table td{padding:9px 10px;font-size:11px;border-bottom:1px solid var(--border);text-align:center}
+.m-table td:first-child{text-align:left;font-weight:700;font-size:12px}
+.m-table tr:last-child td{border-bottom:none}
+.m-total td{background:var(--gold-dim);font-family:var(--mono)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--surface2);border:1px solid var(--border2);padding:10px 22px;border-radius:20px;font-size:13px;opacity:0;transition:all .25s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div id="loginScreen">
+  <div class="login-logo">SPORT INVESTMENT FUND · 2026</div>
+  <div class="login-title">SIF Scorecard</div>
+  <div class="login-sub">กรอก Password เพื่อเข้าสู่ระบบ</div>
+
+  <div class="login-box">
+    <div class="login-box-label">Password</div>
+    <div class="pw-wrap">
+      <input type="password" class="pw-input" id="pwInput"
+             placeholder="กรอก password..."
+             onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="pw-btn" onclick="doLogin()">เข้า →</button>
+    </div>
+    <div class="pw-error" id="pwError">❌ Password ไม่ถูกต้อง</div>
+  </div>
+</div>
+
+<!-- ════ APP ════ -->
+<div id="appScreen">
+
+  <div class="topbar">
+    <div class="topbar-l">
+      <div class="top-badge" id="topBadge"></div>
+      <div>
+        <div class="top-name" id="topName"></div>
+        <div class="top-role" id="topRole"></div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
+  </div>
+
+  <div class="week-bar">
+    <div class="week-tabs">
+      <button class="wtab on" onclick="setWeek(1)">W1</button>
+      <button class="wtab" onclick="setWeek(2)">W2</button>
+      <button class="wtab" onclick="setWeek(3)">W3</button>
+      <button class="wtab" onclick="setWeek(4)">W4</button>
+    </div>
+  </div>
+
+  <div class="sum-strip">
+    <div class="sbox"><div class="sbox-lbl">P&L รวม</div><div class="sbox-val" id="sPL">—</div><div class="sbox-sub" id="sPLsub">สัปดาห์นี้</div></div>
+    <div class="sbox"><div class="sbox-lbl">ROI</div><div class="sbox-val" id="sROI">—</div><div class="sbox-sub" id="sROIsub">ทีมของฉัน</div></div>
+    <div class="sbox"><div class="sbox-lbl">Hit Rate</div><div class="sbox-val" id="sHit">—</div><div class="sbox-sub">ถูก/ทั้งหมด</div></div>
+    <div class="sbox"><div class="sbox-lbl">รอผล</div><div class="sbox-val" id="sPend" style="color:var(--gold)">0</div><div class="sbox-sub">pending</div></div>
+  </div>
+
+  <div class="sec">🏆 Leaderboard สัปดาห์นี้</div>
+  <div class="lb-grid" id="lbGrid"></div>
+
+  <div class="sec" id="teamsSec">📋 บันทึกบิล</div>
+  <div class="teams-wrap" id="teamsWrap"></div>
+
+  <!-- Monthly: CEO only -->
+  <div id="monthlySection" style="display:none;margin-top:8px">
+    <div class="sec">📊 Monthly Overview</div>
+    <div class="m-wrap"><table class="m-table" id="mTable"></table></div>
+  </div>
+
+  <div style="height:48px"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PASSWORDS = {
+  ceo:   'sif2026ceo',
+  alpha: 'alpha2026',
+  beta:  'beta2026',
+  gamma: 'gamma2026',
+};
+
+const BUDGET = 5000;
+const LEAGUES   = ['EPL','La Liga','Bundesliga','NBA','อื่นๆ'];
+const BET_TYPES = ['Asian Handicap','Over/Under','1X2','Moneyline','อื่นๆ'];
+const TEAMS = ['alpha','beta','gamma'];
+const TCFG = {
+  ceo:   {name:'CEO',        role:'ดูข้อมูลทุกทีม',    color:'var(--gold)', dim:'var(--gold-dim)',  badge:'👑', border:'rgba(228,168,50,0.4)'},
+  alpha: {name:'TEAM ALPHA', role:'"The Surgeon"',      color:'var(--alpha)',dim:'var(--alpha-dim)', badge:'α',  border:'rgba(64,153,247,0.35)'},
+  beta:  {name:'TEAM BETA',  role:'"Value Hunter"',     color:'var(--beta)', dim:'var(--beta-dim)',  badge:'β',  border:'rgba(232,85,85,0.35)'},
+  gamma: {name:'TEAM GAMMA', role:'"The Machine"',      color:'var(--gamma)',dim:'var(--gamma-dim)', badge:'γ',  border:'rgba(228,168,50,0.35)'},
+};
+
+let role = null;
+let CW = 1;
+let data = {};
+let fopen = {};
+let bodyOpen = {};
+
+function save(){ try{localStorage.setItem('sif_sc',JSON.stringify(data));}catch(e){} }
+function load(){ try{const r=localStorage.getItem('sif_sc');if(r)data=JSON.parse(r);}catch(e){data={};} }
+
+function K(t,w){ return t+'_w'+w; }
+function getBets(t,w){ return data[K(t,w)]||[]; }
+
+function calcTeam(t,w){
+  const bets=getBets(t,w);
+  let won=0,lost=0,pend=0,pl=0;
+  for(const b of bets){
+    if(b.status==='win'){won++;pl+=b.profit;}
+    else if(b.status==='lose'){lost++;pl-=b.stake;}
+    else pend++;
+  }
+  const s=won+lost;
+  return{bets:bets.length,won,lost,pend,pl,
+    hitRate:s>0?Math.round(won/s*100):null,
+    roi:s>0||pl!==0?(pl/BUDGET*100).toFixed(1):null};
+}
+function calcWeek(w){
+  let pl=0,won=0,lost=0,pend=0;
+  for(const t of TEAMS){const c=calcTeam(t,w);pl+=c.pl;won+=c.won;lost+=c.lost;pend+=c.pend;}
+  const s=won+lost;
+  return{pl,hitRate:s>0?Math.round(won/s*100):null,roi:(pl/15000*100).toFixed(1),pend};
+}
+
+function fmt(v){if(v===0)return'0';return(v>0?'+':'-')+Math.abs(v).toLocaleString('th-TH');}
+function fROI(v){if(v===null)return'—';return(parseFloat(v)>=0?'+':'')+v+'%';}
+function col(v){return v>0?'var(--green)':v<0?'var(--red)':'var(--gray)';}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+function doLogin(){
+  const pw = document.getElementById('pwInput').value.trim();
+  const err = document.getElementById('pwError');
+  const matched = Object.entries(PASSWORDS).find(([,p]) => p === pw);
+  if(matched){
+    err.style.display='none';
+    role = matched[0];
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('appScreen').style.display='block';
+    initApp();
+  } else {
+    err.style.display='block';
+    document.getElementById('pwInput').value='';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+function logout(){
+  role=null;
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('pwInput').value='';
+  document.getElementById('pwError').style.display='none';
+}
+
+function initApp(){
+  const cfg = TCFG[role];
+  const isCEO = role==='ceo';
+  const badge = document.getElementById('topBadge');
+  badge.style.background = cfg.dim;
+  badge.style.color = cfg.color;
+  badge.textContent = cfg.badge;
+  document.getElementById('topName').textContent = cfg.name;
+  document.getElementById('topRole').textContent = cfg.role;
+  document.getElementById('monthlySection').style.display = isCEO?'block':'none';
+  document.getElementById('sROIsub').textContent = isCEO?'ทุกทีมรวม':'ทีมของฉัน';
+  document.getElementById('sPLsub').textContent = isCEO?'ทุกทีมรวม':'ทีมของฉัน';
+  TEAMS.forEach(t=>{ if(bodyOpen[t]===undefined) bodyOpen[t]=true; });
+  setWeek(1);
+}
+
+function setWeek(w){
+  CW=w;
+  document.querySelectorAll('.wtab').forEach((t,i)=>t.classList.toggle('on',i+1===w));
+  renderAll();
+}
+
+function renderAll(){
+  renderSummary();
+  renderLeaderboard();
+  renderTeams();
+  if(role==='ceo') renderMonthly();
+}
+
+function renderSummary(){
+  const isCEO = role==='ceo';
+  let pl,roi,hitRate,pend;
+  if(isCEO){
+    const w=calcWeek(CW);pl=w.pl;roi=w.roi;hitRate=w.hitRate;pend=w.pend;
+  } else {
+    const c=calcTeam(role,CW);pl=c.pl;roi=c.roi;hitRate=c.hitRate;pend=c.pend;
+  }
+  const plEl=document.getElementById('sPL');
+  plEl.textContent=pl!==0?fmt(pl)+'฿':'0฿';plEl.style.color=col(pl);
+  const roiEl=document.getElementById('sROI');
+  roiEl.textContent=fROI(roi);roiEl.style.color=parseFloat(roi)>=0?'var(--green)':'var(--red)';
+  document.getElementById('sHit').textContent=hitRate!==null?hitRate+'%':'—';
+  document.getElementById('sPend').textContent=pend||'0';
+}
+
+function renderLeaderboard(){
+  const isCEO=role==='ceo';
+  const scores=TEAMS.map(t=>{const c=calcTeam(t,CW);return{...TCFG[t],id:t,...c};})
+    .sort((a,b)=>b.pl-a.pl);
+  const medals=['🥇','🥈','🥉'];
+  document.getElementById('lbGrid').innerHTML=scores.map((t,i)=>{
+    const show=isCEO||(t.id===role);
+    return `<div class="lb-card ${i===0&&show?'crown':''}">
+      <div class="lb-medal">${medals[i]}</div>
+      <div class="lb-name" style="color:${show?t.color:'var(--gray)'}">${show?t.id.toUpperCase():'???'}</div>
+      <div class="lb-roi" style="color:${show?col(t.pl):'var(--gray)'};${!show?'filter:blur(5px)':''}">${show?fROI(t.roi):'—%'}</div>
+      <div class="lb-pl" style="${!show?'filter:blur(5px)':''}">${show?(t.pl!==0?fmt(t.pl)+'฿':'รอผล'):'—'}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderTeams(){
+  const isCEO=role==='ceo';
+  const toShow=isCEO?TEAMS:[role];
+  const wrap=document.getElementById('teamsWrap');
+  wrap.innerHTML='';
+
+  for(const tid of toShow){
+    const cfg=TCFG[tid];
+    const c=calcTeam(tid,CW);
+    const bets=getBets(tid,CW);
+    const canEdit=!isCEO;
+    const isOpen=bodyOpen[tid]!==false;
+
+    const panel=document.createElement('div');
+    panel.className='t-panel';
+    panel.style.borderColor=cfg.border;
+    panel.innerHTML=`
+      <div class="t-head" onclick="toggleBody('${tid}')">
+        <div class="t-head-l">
+          <div class="t-ico" style="background:${cfg.dim};color:${cfg.color}">${cfg.badge}</div>
+          <div>
+            <div class="t-pname" style="color:${cfg.color}">${cfg.name}</div>
+            <div class="t-pnick">${cfg.role}</div>
+          </div>
+        </div>
+        <div class="t-head-r">
+          <div class="t-roi" style="color:${col(c.pl)}">${fROI(c.roi)}</div>
+          <div class="t-plval" style="color:${col(c.pl)}">${c.pl!==0?fmt(c.pl)+'฿':'0฿'}</div>
+          <div class="t-chevron ${isOpen?'open':''}" id="chev-${tid}">▲</div>
+        </div>
+      </div>
+      <div class="t-body ${isOpen?'open':''}" id="tbody-${tid}">
+        <div class="t-stats">
+          <div class="ts-box"><div class="ts-lbl">บิลทั้งหมด</div><div class="ts-val">${c.bets}</div></div>
+          <div class="ts-box"><div class="ts-lbl">ถูก/ผิด</div><div class="ts-val">${c.won}<span style="color:var(--gray);font-size:10px">/${c.lost}</span></div></div>
+          <div class="ts-box"><div class="ts-lbl">Hit Rate</div><div class="ts-val" style="color:${c.hitRate!==null?(c.hitRate>=55?'var(--green)':'var(--red)'):'var(--gray)'}">${c.hitRate!==null?c.hitRate+'%':'—'}</div></div>
+          <div class="ts-box"><div class="ts-lbl">รอผล</div><div class="ts-val" style="color:var(--gold)">${c.pend}</div></div>
+        </div>
+        ${canEdit?`
+        <button class="add-btn" onclick="toggleForm('${tid}')">+ เพิ่มบิลใหม่</button>
+        <div class="bet-form" id="form-${tid}">
+          <div class="f-row"><div class="fg"><label>คู่แข่งขัน / ชื่อเกม</label><input type="text" id="fm-${tid}" placeholder="เช่น Man City vs Arsenal"></div></div>
+          <div class="f-row f3">
+            <div class="fg"><label>ลีก</label><select id="fl-${tid}">${LEAGUES.map(l=>`<option>${l}</option>`).join('')}</select></div>
+            <div class="fg"><label>ประเภทบิล</label><select id="ft-${tid}">${BET_TYPES.map(b=>`<option>${b}</option>`).join('')}</select></div>
+            <div class="fg"><label>สถานะ</label><select id="fs-${tid}"><option value="pending">รอผล ⏳</option><option value="win">ชนะ ✅</option><option value="lose">แพ้ ❌</option></select></div>
+          </div>
+          <div class="f-row f2">
+            <div class="fg"><label>Odds</label><input type="number" id="fo-${tid}" placeholder="1.85" step="0.01" min="1"></div>
+            <div class="fg"><label>Stake (฿)</label><input type="number" id="fk-${tid}" placeholder="1000" step="100" min="1"></div>
+          </div>
+          <div class="f-btns">
+            <button class="fbtn fbtn-cancel" onclick="toggleForm('${tid}')">ยกเลิก</button>
+            <button class="fbtn fbtn-ok" onclick="addBet('${tid}')">💾 บันทึก</button>
+          </div>
+        </div>`:`<div class="readonly-note">👁 CEO View — อ่านอย่างเดียว</div>`}
+        <div class="bets-list" id="blist-${tid}">
+          ${bets.length===0
+            ?`<div class="empty-bets">${canEdit?'ยังไม่มีบิล — กด "+ เพิ่มบิลใหม่"':'ยังไม่มีบิลสัปดาห์นี้'}</div>`
+            :bets.map(b=>betRow(b,tid,canEdit)).join('')}
+        </div>
+      </div>`;
+    wrap.appendChild(panel);
+  }
+}
+
+function betRow(b,tid,canEdit){
+  const pw=b.status==='win',pl=b.status==='lose';
+  const pTxt=pw?'+'+Math.round(b.profit).toLocaleString()+'฿':pl?'-'+b.stake.toLocaleString()+'฿':'⏳';
+  const pc=pw?'var(--green)':pl?'var(--red)':'var(--gold)';
+  const btns=canEdit?`
+    <div class="st-btns">
+      <button class="stb sw ${pw?'on':''}" onclick="setSt('${tid}','${b.id}','win')" title="ชนะ">✅</button>
+      <button class="stb sl ${pl?'on':''}" onclick="setSt('${tid}','${b.id}','lose')" title="แพ้">❌</button>
+      <button class="stb sp ${b.status==='pending'?'on':''}" onclick="setSt('${tid}','${b.id}','pending')" title="รอผล">⏳</button>
+    </div>
+    <button class="del-btn" onclick="delBet('${tid}','${b.id}')">×</button>`:'';
+  return `<div class="bet-row">
+    <div class="bet-main">
+      <div class="bet-mtxt">${b.match}</div>
+      <div class="bet-tags"><span class="tag">${b.league}</span><span class="tag">${b.betType}</span><span style="color:var(--gold-lt)">@${b.odds}</span></div>
+    </div>
+    ${btns}
+    <div class="bet-r">
+      <div class="bet-stake">${b.stake.toLocaleString()}฿</div>
+      <div class="bet-profit" style="color:${pc}">${pTxt}</div>
+    </div>
+  </div>`;
+}
+
+function toggleBody(tid){
+  bodyOpen[tid]=!bodyOpen[tid];
+  document.getElementById('tbody-'+tid).classList.toggle('open',bodyOpen[tid]);
+  document.getElementById('chev-'+tid).classList.toggle('open',bodyOpen[tid]);
+}
+function toggleForm(tid){
+  fopen[tid]=!fopen[tid];
+  const f=document.getElementById('form-'+tid);
+  if(f) f.classList.toggle('open',fopen[tid]);
+}
+
+function addBet(tid){
+  const match=(document.getElementById('fm-'+tid).value.trim())||'ไม่ระบุ';
+  const league=document.getElementById('fl-'+tid).value;
+  const btype=document.getElementById('ft-'+tid).value;
+  const status=document.getElementById('fs-'+tid).value;
+  const odds=parseFloat(document.getElementById('fo-'+tid).value);
+  const stake=parseFloat(document.getElementById('fk-'+tid).value);
+  if(!odds||!stake||odds<1||stake<=0){toast('⚠️ กรอก Odds และ Stake ให้ถูกต้อง');return;}
+  const k=K(tid,CW);
+  if(!data[k])data[k]=[];
+  data[k].push({id:Date.now()+'',match,league,betType:btype,odds,stake,status,
+    profit:parseFloat(((odds-1)*stake).toFixed(2))});
+  save();
+  document.getElementById('fm-'+tid).value='';
+  document.getElementById('fo-'+tid).value='';
+  document.getElementById('fk-'+tid).value='';
+  fopen[tid]=false;
+  renderAll();
+  toast('✅ บันทึกบิลเรียบร้อย');
+}
+function setSt(tid,bid,st){
+  const k=K(tid,CW);
+  const b=(data[k]||[]).find(x=>x.id===bid);if(!b)return;
+  b.status=st;save();renderAll();
+  toast(st==='win'?'🎉 ชนะ!':st==='lose'?'😔 แพ้':'⏳ รอผล');
+}
+function delBet(tid,bid){
+  const k=K(tid,CW);
+  data[k]=(data[k]||[]).filter(x=>x.id!==bid);
+  save();renderAll();toast('🗑 ลบแล้ว');
+}
+
+function renderMonthly(){
+  const WS=[1,2,3,4];
+  let html=`<tr><th>ทีม</th>${WS.map(w=>`<th>W${w}</th>`).join('')}<th>ROI รวม</th><th>P&L รวม</th></tr>`;
+  for(const tid of TEAMS){
+    const cfg=TCFG[tid];let total=0;
+    const cells=WS.map(w=>{const c=calcTeam(tid,w);total+=c.pl;
+      if(!c.bets)return`<td style="color:var(--gray)">—</td>`;
+      return`<td style="color:${col(c.pl)};font-family:var(--mono);font-size:11px">${fROI(c.roi)}</td>`;});
+    const tr=((total/(BUDGET*4))*100).toFixed(1);
+    html+=`<tr><td style="color:${cfg.color}">${tid.toUpperCase()}</td>${cells.join('')}<td style="color:${col(total)};font-family:var(--mono)">${fROI(tr)}</td><td style="color:${col(total)};font-family:var(--mono)">${fmt(total)}฿</td></tr>`;
+  }
+  const tots=WS.map(w=>calcWeek(w));const gpl=tots.reduce((a,b)=>a+b.pl,0);
+  const gROI=((gpl/60000)*100).toFixed(1);
+  html+=`<tr class="m-total"><td>รวม</td>${tots.map(w=>`<td style="color:${col(w.pl)}">${w.hitRate!==null?fROI(w.roi):'—'}</td>`).join('')}<td style="color:${col(gpl)}">${fROI(gROI)}</td><td style="color:${col(gpl)}">${fmt(gpl)}฿</td></tr>`;
+  document.getElementById('mTable').innerHTML=html;
+}
+
+load();
+</script>
+</body>
+</html>
