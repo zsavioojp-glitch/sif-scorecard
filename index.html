@@ -243,6 +243,10 @@ function setSyncDot(state){
 }
 
 // ══ JSONBIN ══
+function isAnyFormOpen(){
+  return TEAMS.some(t => fopen[t]);
+}
+
 async function loadFromCloud(){
   try{
     setSyncDot('syncing');
@@ -253,7 +257,8 @@ async function loadFromCloud(){
     const json=await res.json();
     if(json && typeof json==='object') data=json;
     setSyncDot('ok');
-    renderAll();
+    // ถ้ากำลังกรอกฟอร์มอยู่ ไม่ render ใหม่ กันข้อมูลหาย
+    if(!isAnyFormOpen()) renderAll();
   }catch(e){
     setSyncDot('err');
     toast('⚠️ โหลดข้อมูลไม่สำเร็จ');
