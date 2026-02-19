@@ -21,7 +21,6 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--sans);background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
 
-/* ── LOGIN ───────────────────────────────────── */
 #loginScreen{
   min-height:100vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;padding:40px 28px;
@@ -33,56 +32,29 @@ body{font-family:var(--sans);background:var(--bg);color:var(--white);min-height:
   background:linear-gradient(135deg,var(--white),var(--light));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .login-sub{font-size:13px;color:var(--gray);text-align:center;margin-bottom:48px}
-
-/* ── FIX: login box ไม่ให้ล้น ── */
-.login-box{
-  width:100%;max-width:340px;
-  background:var(--surface);border:1px solid var(--border2);
-  border-radius:18px;padding:28px 24px;
-  overflow:hidden; /* กันล้น */
-}
+.login-box{width:100%;max-width:340px;background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:28px 24px;overflow:hidden}
 .login-box-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:10px}
-
-/* ── FIX: pw-wrap เป็น flex ที่ไม่ล้น ── */
 .pw-wrap{display:flex;gap:8px;width:100%;min-width:0}
-
-/* ── FIX: input ต้องมี min-width:0 และ width:0 เพื่อให้ flex shrink ได้ ── */
-.pw-input{
-  flex:1 1 0;
-  min-width:0;
-  width:0;
-  padding:13px 16px;
-  background:var(--bg2);
-  border:1px solid var(--border2);border-radius:10px;
-  color:var(--white);font-size:16px;font-family:var(--mono);
-  letter-spacing:4px;outline:none;transition:border-color .2s;
-}
+.pw-input{flex:1 1 0;min-width:0;width:0;padding:13px 16px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--white);font-size:16px;font-family:var(--mono);letter-spacing:4px;outline:none;transition:border-color .2s}
 .pw-input:focus{border-color:var(--gold)}
 .pw-input::placeholder{letter-spacing:0;font-family:var(--sans);font-size:13px;color:var(--gray)}
-
-/* ── FIX: ปุ่มไม่ shrink ── */
-.pw-btn{
-  flex-shrink:0;
-  padding:13px 20px;border-radius:10px;background:var(--gold);
-  color:#0c1525;font-size:14px;font-weight:700;border:none;
-  cursor:pointer;font-family:var(--sans);transition:all .2s;white-space:nowrap;
-}
+.pw-btn{flex-shrink:0;padding:13px 20px;border-radius:10px;background:var(--gold);color:#0c1525;font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:var(--sans);transition:all .2s;white-space:nowrap}
 .pw-btn:hover{background:var(--gold-lt)}
 .pw-btn:active{transform:scale(.97)}
 .pw-error{font-size:12px;color:var(--red);margin-top:10px;display:none;padding:8px 12px;background:var(--red-dim);border-radius:8px}
 
-/* ── APP ─────────────────────────────────────── */
 #appScreen{display:none}
 
-.topbar{
-  position:sticky;top:0;z-index:50;
-  background:rgba(7,13,24,0.95);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border2);
-  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
-}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--gray);display:inline-block;margin-left:6px;vertical-align:middle;transition:background .3s}
+.sync-dot.syncing{background:var(--gold);animation:pulse .8s infinite}
+.sync-dot.ok{background:var(--green)}
+.sync-dot.err{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.topbar{position:sticky;top:0;z-index:50;background:rgba(7,13,24,0.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border2);padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
 .topbar-l{display:flex;align-items:center;gap:10px}
 .top-badge{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;font-family:var(--mono);flex-shrink:0}
-.top-name{font-size:14px;font-weight:700}
+.top-name{font-size:14px;font-weight:700;display:flex;align-items:center;gap:4px}
 .top-role{font-size:10px;color:var(--gray);margin-top:1px;letter-spacing:.5px}
 .logout-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--gray);font-size:12px;cursor:pointer;font-family:var(--sans);transition:all .2s}
 .logout-btn:hover{color:var(--white);border-color:rgba(255,255,255,0.25)}
@@ -121,10 +93,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--white);min-height:
 .t-plval{font-size:11px;margin-top:2px}
 .t-chevron{font-size:10px;color:var(--gray);margin-top:4px;transition:transform .3s;display:inline-block}
 .t-chevron.open{transform:rotate(180deg)}
-
 .t-body{padding:14px 15px;border-top:1px solid var(--border);display:none}
 .t-body.open{display:block}
-
 .t-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:14px}
 .ts-box{background:var(--bg2);border-radius:8px;padding:9px 7px;text-align:center;border:1px solid var(--border)}
 .ts-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
@@ -132,7 +102,6 @@ body{font-family:var(--sans);background:var(--bg);color:var(--white);min-height:
 
 .add-btn{width:100%;padding:10px;border-radius:8px;border:1px dashed var(--border2);background:transparent;color:var(--gray);font-size:13px;cursor:pointer;font-family:var(--sans);transition:all .2s;margin-bottom:12px}
 .add-btn:hover{background:var(--surface2);color:var(--white);border-style:solid}
-
 .bet-form{background:var(--bg2);border-radius:10px;padding:14px;border:1px solid var(--border2);margin-bottom:12px;display:none}
 .bet-form.open{display:block}
 .f-row{display:grid;gap:7px;margin-bottom:7px}
@@ -182,32 +151,26 @@ body{font-family:var(--sans);background:var(--bg);color:var(--white);min-height:
 </head>
 <body>
 
-<!-- ════ LOGIN ════ -->
 <div id="loginScreen">
   <div class="login-logo">SPORT INVESTMENT FUND · 2026</div>
   <div class="login-title">SIF Scorecard</div>
   <div class="login-sub">กรอก Password เพื่อเข้าสู่ระบบ</div>
-
   <div class="login-box">
     <div class="login-box-label">Password</div>
     <div class="pw-wrap">
-      <input type="password" class="pw-input" id="pwInput"
-             placeholder="กรอก password..."
-             onkeydown="if(event.key==='Enter')doLogin()">
+      <input type="password" class="pw-input" id="pwInput" placeholder="กรอก password..." onkeydown="if(event.key==='Enter')doLogin()">
       <button class="pw-btn" onclick="doLogin()">เข้า →</button>
     </div>
     <div class="pw-error" id="pwError">❌ Password ไม่ถูกต้อง</div>
   </div>
 </div>
 
-<!-- ════ APP ════ -->
 <div id="appScreen">
-
   <div class="topbar">
     <div class="topbar-l">
       <div class="top-badge" id="topBadge"></div>
       <div>
-        <div class="top-name" id="topName"></div>
+        <div class="top-name"><span id="topNameTxt"></span><span class="sync-dot" id="syncDot" title="สถานะ sync"></span></div>
         <div class="top-role" id="topRole"></div>
       </div>
     </div>
@@ -233,10 +196,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--white);min-height:
   <div class="sec">🏆 Leaderboard สัปดาห์นี้</div>
   <div class="lb-grid" id="lbGrid"></div>
 
-  <div class="sec" id="teamsSec">📋 บันทึกบิล</div>
+  <div class="sec">📋 บันทึกบิล</div>
   <div class="teams-wrap" id="teamsWrap"></div>
 
-  <!-- Monthly: CEO only -->
   <div id="monthlySection" style="display:none;margin-top:8px">
     <div class="sec">📊 Monthly Overview</div>
     <div class="m-wrap"><table class="m-table" id="mTable"></table></div>
@@ -248,35 +210,88 @@ body{font-family:var(--sans);background:var(--bg);color:var(--white);min-height:
 <div class="toast" id="toast"></div>
 
 <script>
+// ══ CONFIG ══
 const PASSWORDS = {
   ceo:   'sif2026ceo',
   alpha: 'alpha2026',
   beta:  'beta2026',
   gamma: 'gamma2026',
 };
+const BIN_ID  = '69972d04ae596e708f37a38f';
+const API_KEY = '$2a$10$KIZysrlpSvnuxjNsPlNvFe1uz9A/U.9f/vBeBtK4nWOqIG3j.U/cO';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-const BUDGET = 5000;
+const BUDGET    = 5000;
 const LEAGUES   = ['EPL','La Liga','Bundesliga','NBA','อื่นๆ'];
 const BET_TYPES = ['Asian Handicap','Over/Under','1X2','Moneyline','อื่นๆ'];
 const TEAMS = ['alpha','beta','gamma'];
 const TCFG = {
-  ceo:   {name:'CEO',        role:'ดูข้อมูลทุกทีม',    color:'var(--gold)', dim:'var(--gold-dim)',  badge:'👑', border:'rgba(228,168,50,0.4)'},
-  alpha: {name:'TEAM ALPHA', role:'"The Surgeon"',      color:'var(--alpha)',dim:'var(--alpha-dim)', badge:'α',  border:'rgba(64,153,247,0.35)'},
-  beta:  {name:'TEAM BETA',  role:'"Value Hunter"',     color:'var(--beta)', dim:'var(--beta-dim)',  badge:'β',  border:'rgba(232,85,85,0.35)'},
-  gamma: {name:'TEAM GAMMA', role:'"The Machine"',      color:'var(--gamma)',dim:'var(--gamma-dim)', badge:'γ',  border:'rgba(228,168,50,0.35)'},
+  ceo:   {name:'CEO',        role:'ดูข้อมูลทุกทีม',  color:'var(--gold)', dim:'var(--gold-dim)',  badge:'👑', border:'rgba(228,168,50,0.4)'},
+  alpha: {name:'TEAM ALPHA', role:'"The Surgeon"',    color:'var(--alpha)',dim:'var(--alpha-dim)', badge:'α',  border:'rgba(64,153,247,0.35)'},
+  beta:  {name:'TEAM BETA',  role:'"Value Hunter"',   color:'var(--beta)', dim:'var(--beta-dim)',  badge:'β',  border:'rgba(232,85,85,0.35)'},
+  gamma: {name:'TEAM GAMMA', role:'"The Machine"',    color:'var(--gamma)',dim:'var(--gamma-dim)', badge:'γ',  border:'rgba(228,168,50,0.35)'},
 };
 
-let role = null;
-let CW = 1;
-let data = {};
-let fopen = {};
-let bodyOpen = {};
+let role=null, CW=1, data={}, fopen={}, bodyOpen={};
+let syncTimer=null, polling=null;
 
-function save(){ try{localStorage.setItem('sif_sc',JSON.stringify(data));}catch(e){} }
-function load(){ try{const r=localStorage.getItem('sif_sc');if(r)data=JSON.parse(r);}catch(e){data={};} }
+// ══ SYNC DOT ══
+function setSyncDot(state){
+  const d=document.getElementById('syncDot');
+  if(!d) return;
+  d.className='sync-dot'+(state?' '+state:'');
+}
 
-function K(t,w){ return t+'_w'+w; }
-function getBets(t,w){ return data[K(t,w)]||[]; }
+// ══ JSONBIN ══
+async function loadFromCloud(){
+  try{
+    setSyncDot('syncing');
+    const res=await fetch(BIN_URL+'/latest',{
+      headers:{'X-Access-Key':API_KEY,'X-Bin-Meta':'false'}
+    });
+    if(!res.ok) throw new Error();
+    const json=await res.json();
+    if(json && typeof json==='object') data=json;
+    setSyncDot('ok');
+    renderAll();
+  }catch(e){
+    setSyncDot('err');
+    toast('⚠️ โหลดข้อมูลไม่สำเร็จ');
+  }
+}
+
+async function saveToCloud(){
+  try{
+    setSyncDot('syncing');
+    const res=await fetch(BIN_URL,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Access-Key':API_KEY},
+      body:JSON.stringify(data)
+    });
+    if(!res.ok) throw new Error();
+    setSyncDot('ok');
+  }catch(e){
+    setSyncDot('err');
+    toast('⚠️ บันทึกไม่สำเร็จ');
+  }
+}
+
+function scheduleSave(){
+  if(syncTimer) clearTimeout(syncTimer);
+  syncTimer=setTimeout(saveToCloud,1200);
+}
+
+function startPolling(){
+  if(polling) clearInterval(polling);
+  polling=setInterval(loadFromCloud,15000);
+}
+function stopPolling(){
+  if(polling){ clearInterval(polling); polling=null; }
+}
+
+// ══ CALC ══
+function K(t,w){return t+'_w'+w;}
+function getBets(t,w){return data[K(t,w)]||[];}
 
 function calcTeam(t,w){
   const bets=getBets(t,w);
@@ -308,13 +323,14 @@ function toast(msg){
   setTimeout(()=>t.classList.remove('show'),2200);
 }
 
+// ══ LOGIN ══
 function doLogin(){
-  const pw = document.getElementById('pwInput').value.trim();
-  const err = document.getElementById('pwError');
-  const matched = Object.entries(PASSWORDS).find(([,p]) => p === pw);
+  const pw=document.getElementById('pwInput').value.trim();
+  const err=document.getElementById('pwError');
+  const matched=Object.entries(PASSWORDS).find(([,p])=>p===pw);
   if(matched){
     err.style.display='none';
-    role = matched[0];
+    role=matched[0];
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('appScreen').style.display='block';
     initApp();
@@ -326,6 +342,7 @@ function doLogin(){
 }
 
 function logout(){
+  stopPolling();
   role=null;
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('appScreen').style.display='none';
@@ -333,20 +350,20 @@ function logout(){
   document.getElementById('pwError').style.display='none';
 }
 
+// ══ INIT ══
 function initApp(){
-  const cfg = TCFG[role];
-  const isCEO = role==='ceo';
-  const badge = document.getElementById('topBadge');
-  badge.style.background = cfg.dim;
-  badge.style.color = cfg.color;
-  badge.textContent = cfg.badge;
-  document.getElementById('topName').textContent = cfg.name;
-  document.getElementById('topRole').textContent = cfg.role;
-  document.getElementById('monthlySection').style.display = isCEO?'block':'none';
-  document.getElementById('sROIsub').textContent = isCEO?'ทุกทีมรวม':'ทีมของฉัน';
-  document.getElementById('sPLsub').textContent = isCEO?'ทุกทีมรวม':'ทีมของฉัน';
-  TEAMS.forEach(t=>{ if(bodyOpen[t]===undefined) bodyOpen[t]=true; });
-  setWeek(1);
+  const cfg=TCFG[role];
+  const isCEO=role==='ceo';
+  const badge=document.getElementById('topBadge');
+  badge.style.background=cfg.dim; badge.style.color=cfg.color; badge.textContent=cfg.badge;
+  document.getElementById('topNameTxt').textContent=cfg.name;
+  document.getElementById('topRole').textContent=cfg.role;
+  document.getElementById('monthlySection').style.display=isCEO?'block':'none';
+  document.getElementById('sROIsub').textContent=isCEO?'ทุกทีมรวม':'ทีมของฉัน';
+  document.getElementById('sPLsub').textContent=isCEO?'ทุกทีมรวม':'ทีมของฉัน';
+  TEAMS.forEach(t=>{if(bodyOpen[t]===undefined)bodyOpen[t]=true;});
+  loadFromCloud();
+  startPolling();
 }
 
 function setWeek(w){
@@ -356,36 +373,30 @@ function setWeek(w){
 }
 
 function renderAll(){
-  renderSummary();
-  renderLeaderboard();
-  renderTeams();
+  renderSummary(); renderLeaderboard(); renderTeams();
   if(role==='ceo') renderMonthly();
 }
 
 function renderSummary(){
-  const isCEO = role==='ceo';
+  const isCEO=role==='ceo';
   let pl,roi,hitRate,pend;
-  if(isCEO){
-    const w=calcWeek(CW);pl=w.pl;roi=w.roi;hitRate=w.hitRate;pend=w.pend;
-  } else {
-    const c=calcTeam(role,CW);pl=c.pl;roi=c.roi;hitRate=c.hitRate;pend=c.pend;
-  }
+  if(isCEO){const w=calcWeek(CW);pl=w.pl;roi=w.roi;hitRate=w.hitRate;pend=w.pend;}
+  else{const c=calcTeam(role,CW);pl=c.pl;roi=c.roi;hitRate=c.hitRate;pend=c.pend;}
   const plEl=document.getElementById('sPL');
-  plEl.textContent=pl!==0?fmt(pl)+'฿':'0฿';plEl.style.color=col(pl);
+  plEl.textContent=pl!==0?fmt(pl)+'฿':'0฿'; plEl.style.color=col(pl);
   const roiEl=document.getElementById('sROI');
-  roiEl.textContent=fROI(roi);roiEl.style.color=parseFloat(roi)>=0?'var(--green)':'var(--red)';
+  roiEl.textContent=fROI(roi); roiEl.style.color=parseFloat(roi)>=0?'var(--green)':'var(--red)';
   document.getElementById('sHit').textContent=hitRate!==null?hitRate+'%':'—';
   document.getElementById('sPend').textContent=pend||'0';
 }
 
 function renderLeaderboard(){
   const isCEO=role==='ceo';
-  const scores=TEAMS.map(t=>{const c=calcTeam(t,CW);return{...TCFG[t],id:t,...c};})
-    .sort((a,b)=>b.pl-a.pl);
+  const scores=TEAMS.map(t=>{const c=calcTeam(t,CW);return{...TCFG[t],id:t,...c};}).sort((a,b)=>b.pl-a.pl);
   const medals=['🥇','🥈','🥉'];
   document.getElementById('lbGrid').innerHTML=scores.map((t,i)=>{
     const show=isCEO||(t.id===role);
-    return `<div class="lb-card ${i===0&&show?'crown':''}">
+    return`<div class="lb-card ${i===0&&show?'crown':''}">
       <div class="lb-medal">${medals[i]}</div>
       <div class="lb-name" style="color:${show?t.color:'var(--gray)'}">${show?t.id.toUpperCase():'???'}</div>
       <div class="lb-roi" style="color:${show?col(t.pl):'var(--gray)'};${!show?'filter:blur(5px)':''}">${show?fROI(t.roi):'—%'}</div>
@@ -399,25 +410,19 @@ function renderTeams(){
   const toShow=isCEO?TEAMS:[role];
   const wrap=document.getElementById('teamsWrap');
   wrap.innerHTML='';
-
   for(const tid of toShow){
     const cfg=TCFG[tid];
     const c=calcTeam(tid,CW);
     const bets=getBets(tid,CW);
     const canEdit=!isCEO;
     const isOpen=bodyOpen[tid]!==false;
-
     const panel=document.createElement('div');
-    panel.className='t-panel';
-    panel.style.borderColor=cfg.border;
+    panel.className='t-panel'; panel.style.borderColor=cfg.border;
     panel.innerHTML=`
       <div class="t-head" onclick="toggleBody('${tid}')">
         <div class="t-head-l">
           <div class="t-ico" style="background:${cfg.dim};color:${cfg.color}">${cfg.badge}</div>
-          <div>
-            <div class="t-pname" style="color:${cfg.color}">${cfg.name}</div>
-            <div class="t-pnick">${cfg.role}</div>
-          </div>
+          <div><div class="t-pname" style="color:${cfg.color}">${cfg.name}</div><div class="t-pnick">${cfg.role}</div></div>
         </div>
         <div class="t-head-r">
           <div class="t-roi" style="color:${col(c.pl)}">${fROI(c.roi)}</div>
@@ -466,21 +471,18 @@ function betRow(b,tid,canEdit){
   const pc=pw?'var(--green)':pl?'var(--red)':'var(--gold)';
   const btns=canEdit?`
     <div class="st-btns">
-      <button class="stb sw ${pw?'on':''}" onclick="setSt('${tid}','${b.id}','win')" title="ชนะ">✅</button>
-      <button class="stb sl ${pl?'on':''}" onclick="setSt('${tid}','${b.id}','lose')" title="แพ้">❌</button>
-      <button class="stb sp ${b.status==='pending'?'on':''}" onclick="setSt('${tid}','${b.id}','pending')" title="รอผล">⏳</button>
+      <button class="stb sw ${pw?'on':''}" onclick="setSt('${tid}','${b.id}','win')">✅</button>
+      <button class="stb sl ${pl?'on':''}" onclick="setSt('${tid}','${b.id}','lose')">❌</button>
+      <button class="stb sp ${b.status==='pending'?'on':''}" onclick="setSt('${tid}','${b.id}','pending')">⏳</button>
     </div>
     <button class="del-btn" onclick="delBet('${tid}','${b.id}')">×</button>`:'';
-  return `<div class="bet-row">
+  return`<div class="bet-row">
     <div class="bet-main">
       <div class="bet-mtxt">${b.match}</div>
       <div class="bet-tags"><span class="tag">${b.league}</span><span class="tag">${b.betType}</span><span style="color:var(--gold-lt)">@${b.odds}</span></div>
     </div>
     ${btns}
-    <div class="bet-r">
-      <div class="bet-stake">${b.stake.toLocaleString()}฿</div>
-      <div class="bet-profit" style="color:${pc}">${pTxt}</div>
-    </div>
+    <div class="bet-r"><div class="bet-stake">${b.stake.toLocaleString()}฿</div><div class="bet-profit" style="color:${pc}">${pTxt}</div></div>
   </div>`;
 }
 
@@ -507,44 +509,44 @@ function addBet(tid){
   if(!data[k])data[k]=[];
   data[k].push({id:Date.now()+'',match,league,betType:btype,odds,stake,status,
     profit:parseFloat(((odds-1)*stake).toFixed(2))});
-  save();
   document.getElementById('fm-'+tid).value='';
   document.getElementById('fo-'+tid).value='';
   document.getElementById('fk-'+tid).value='';
   fopen[tid]=false;
   renderAll();
+  scheduleSave();
   toast('✅ บันทึกบิลเรียบร้อย');
 }
+
 function setSt(tid,bid,st){
   const k=K(tid,CW);
-  const b=(data[k]||[]).find(x=>x.id===bid);if(!b)return;
-  b.status=st;save();renderAll();
+  const b=(data[k]||[]).find(x=>x.id===bid); if(!b)return;
+  b.status=st; renderAll(); scheduleSave();
   toast(st==='win'?'🎉 ชนะ!':st==='lose'?'😔 แพ้':'⏳ รอผล');
 }
+
 function delBet(tid,bid){
   const k=K(tid,CW);
   data[k]=(data[k]||[]).filter(x=>x.id!==bid);
-  save();renderAll();toast('🗑 ลบแล้ว');
+  renderAll(); scheduleSave(); toast('🗑 ลบแล้ว');
 }
 
 function renderMonthly(){
   const WS=[1,2,3,4];
   let html=`<tr><th>ทีม</th>${WS.map(w=>`<th>W${w}</th>`).join('')}<th>ROI รวม</th><th>P&L รวม</th></tr>`;
   for(const tid of TEAMS){
-    const cfg=TCFG[tid];let total=0;
+    const cfg=TCFG[tid]; let total=0;
     const cells=WS.map(w=>{const c=calcTeam(tid,w);total+=c.pl;
       if(!c.bets)return`<td style="color:var(--gray)">—</td>`;
       return`<td style="color:${col(c.pl)};font-family:var(--mono);font-size:11px">${fROI(c.roi)}</td>`;});
     const tr=((total/(BUDGET*4))*100).toFixed(1);
     html+=`<tr><td style="color:${cfg.color}">${tid.toUpperCase()}</td>${cells.join('')}<td style="color:${col(total)};font-family:var(--mono)">${fROI(tr)}</td><td style="color:${col(total)};font-family:var(--mono)">${fmt(total)}฿</td></tr>`;
   }
-  const tots=WS.map(w=>calcWeek(w));const gpl=tots.reduce((a,b)=>a+b.pl,0);
+  const tots=WS.map(w=>calcWeek(w)); const gpl=tots.reduce((a,b)=>a+b.pl,0);
   const gROI=((gpl/60000)*100).toFixed(1);
   html+=`<tr class="m-total"><td>รวม</td>${tots.map(w=>`<td style="color:${col(w.pl)}">${w.hitRate!==null?fROI(w.roi):'—'}</td>`).join('')}<td style="color:${col(gpl)}">${fROI(gROI)}</td><td style="color:${col(gpl)}">${fmt(gpl)}฿</td></tr>`;
   document.getElementById('mTable').innerHTML=html;
 }
-
-load();
 </script>
 </body>
 </html>
